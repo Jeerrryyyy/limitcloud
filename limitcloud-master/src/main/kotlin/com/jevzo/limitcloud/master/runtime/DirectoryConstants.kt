@@ -1,0 +1,25 @@
+package com.jevzo.limitcloud.master.runtime
+
+class DirectoryConstants {
+    val master: String = "app/master"
+    val masterSecure: String = "app/master/secure"
+    val masterData: String = "app/master/data"
+    val masterDataCloudPlayers: String = "app/master/data/players"
+    val masterConfig: String = "app/master/config"
+    val masterConfigCloud: String = "app/master/config/cloud"
+    val masterConfigGroups: String = "app/master/config/groups"
+    val masterConfigGroupsBungee: String = "app/master/config/groups/bungee"
+    val masterConfigGroupsSpigot: String = "app/master/config/groups/spigot"
+    val masterConfigPermissions: String = "app/master/config/permissions"
+    val masterAddons: String = "app/master/addons"
+    val masterTemplate: String = "app/master/template"
+    val masterTemplateBungee: String = "app/master/template/bungee"
+    val masterTemplateSpigot: String = "app/master/template/spigot"
+    val masterWeb: String = "app/master/web"
+    val masterGlobal: String = "app/master/global"
+    val masterGlobalBungee: String = "app/master/global/bungee"
+    val masterGlobalSpigot: String = "app/master/global/spigot"
+    val masterLocal: String = "app/master/local"
+    val masterLocalSpigot: String = "app/master/local/spigot"
+    val masterLocalBungee: String = "app/master/local/bungee"
+}
