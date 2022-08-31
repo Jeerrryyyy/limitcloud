@@ -11,8 +11,13 @@ import com.jevzo.limitcloud.slave.runtime.RuntimeVars
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import org.kodein.di.instance
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import kotlin.system.exitProcess
 
 class NetworkHandler : SimpleChannelInboundHandler<Packet>() {
+
+    private val logger: Logger = LoggerFactory.getLogger(NetworkHandler::class.java)
 
     private val runtimeVars: RuntimeVars by LimitCloudSlave.KODEIN.instance()
     private val networkUtils: NetworkUtils by LimitCloudSlave.KODEIN.instance()
@@ -23,6 +28,8 @@ class NetworkHandler : SimpleChannelInboundHandler<Packet>() {
     }
 
     override fun channelActive(channelHandlerContext: ChannelHandlerContext) {
+        logger.info("Trying handshake with master server...")
+
         networkUtils.sendPacket(
             PacketOutSlaveRequestConnection(
                 secretKey = runtimeVars.secretKey,
@@ -33,7 +40,7 @@ class NetworkHandler : SimpleChannelInboundHandler<Packet>() {
                     suffix = runtimeVars.slaveConfig.suffix,
                     currentOnlineServers = 0,
                     memory = runtimeVars.slaveConfig.memory,
-                    currentMemoryConsumption = HardwareUtils.getMemoryUsage(),
+                    currentMemoryConsumption = HardwareUtils.getRuntimeMemoryUsage(),
                     currentCpuConsumption = HardwareUtils.getCpuUsage(),
                     responsibleGroups = runtimeVars.slaveConfig.responsibleGroups
                 )
@@ -41,6 +48,11 @@ class NetworkHandler : SimpleChannelInboundHandler<Packet>() {
         )
 
         runtimeVars.masterChannel = channelHandlerContext.channel()
+    }
+
+    override fun channelInactive(channelHandlerContext: ChannelHandlerContext) {
+        logger.info("Master unfortunately disconnected, trying to shut down gracefully...")
+        exitProcess(-1)
     }
 
     @Deprecated(

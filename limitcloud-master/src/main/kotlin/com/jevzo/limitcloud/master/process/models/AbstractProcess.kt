@@ -5,14 +5,14 @@ import com.jevzo.limitcloud.library.process.ProcessType
 
 abstract class AbstractProcess(
     val groupName: String,
-    val name: String,
-    val uuid: String,
+    var name: String?,
+    var uuid: String?,
     val ip: String,
     val type: ProcessType,
     val stage: ProcessStage,
     val minMemory: Int,
     val maxMemory: Int,
-    val port: Int,
+    var port: Int,
     val maxPlayers: Int,
     val joinPower: Int,
     val maintenance: Boolean,

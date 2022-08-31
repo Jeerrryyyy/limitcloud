@@ -3,6 +3,7 @@ package com.jevzo.limitcloud.master.process.protocol.out
 import com.jevzo.limitcloud.library.document.Document
 import com.jevzo.limitcloud.library.network.protocol.Packet
 import com.jevzo.limitcloud.master.process.models.SpigotProcess
+import java.util.*
 
 class PacketOutRequestSpigotProcess(
     private val spigotProcess: SpigotProcess?
@@ -12,8 +13,8 @@ class PacketOutRequestSpigotProcess(
 
     override fun write(): Document {
         return Document().appendString("groupName", spigotProcess!!.groupName)
-            .appendString("name", spigotProcess.name)
-            .appendString("uuid", spigotProcess.uuid)
+            .appendString("name", spigotProcess.name ?: "ERROR")
+            .appendString("uuid", spigotProcess.uuid ?: UUID.randomUUID().toString())
             .appendString("ip", spigotProcess.ip)
             .appendString("type", spigotProcess.type.toString())
             .appendString("stage", spigotProcess.stage.toString())

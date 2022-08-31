@@ -18,8 +18,8 @@ class UpdateLoadInfoTask : TimerTask() {
             PacketOutSlaveUpdateLoadStatus(
                 uuid = runtimeVars.slaveConfig.uuid,
                 currentOnlineServers = 0, // TODO: GET FROM PROCESS REGISTRY
-                currentMemoryConsumption = HardwareUtils.getMemoryUsage(), // TODO: GET FROM PROCESS REGISTRY
-                currentCpuConsumption = HardwareUtils.getCpuUsage(),
+                currentMemoryConsumption = HardwareUtils.getRuntimeMemoryUsage(),
+                currentCpuConsumption = HardwareUtils.getInternalCpuUsage(),
             ),
             runtimeVars.masterChannel
         )

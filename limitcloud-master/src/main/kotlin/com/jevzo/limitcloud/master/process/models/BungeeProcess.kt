@@ -5,8 +5,8 @@ import com.jevzo.limitcloud.library.process.ProcessType
 
 open class BungeeProcess(
     groupName: String,
-    name: String,
-    uuid: String,
+    name: String?,
+    uuid: String?,
     ip: String,
     type: ProcessType,
     stage: ProcessStage,

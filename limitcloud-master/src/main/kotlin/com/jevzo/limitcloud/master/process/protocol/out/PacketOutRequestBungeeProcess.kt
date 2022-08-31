@@ -3,6 +3,7 @@ package com.jevzo.limitcloud.master.process.protocol.out
 import com.jevzo.limitcloud.library.document.Document
 import com.jevzo.limitcloud.library.network.protocol.Packet
 import com.jevzo.limitcloud.master.process.models.BungeeProcess
+import java.util.*
 
 class PacketOutRequestBungeeProcess(
     private val bungeeProcess: BungeeProcess?
@@ -12,8 +13,8 @@ class PacketOutRequestBungeeProcess(
 
     override fun write(): Document {
         return Document().appendString("groupName", bungeeProcess!!.groupName)
-            .appendString("name", bungeeProcess.name)
-            .appendString("uuid", bungeeProcess.uuid)
+            .appendString("name", bungeeProcess.name ?: "ERROR")
+            .appendString("uuid", bungeeProcess.uuid ?: UUID.randomUUID().toString())
             .appendString("ip", bungeeProcess.ip)
             .appendString("type", bungeeProcess.type.toString())
             .appendString("stage", bungeeProcess.stage.toString())

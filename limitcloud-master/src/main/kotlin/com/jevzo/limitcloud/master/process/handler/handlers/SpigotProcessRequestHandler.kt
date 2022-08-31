@@ -32,8 +32,6 @@ class SpigotProcessRequestHandler(
             }
 
             val currentlyRunning = spigotProcessRegistry.getRunningProcessCount(spigotGroup.name)
-            val name = "${spigotGroup.name}-${if ((currentlyRunning + 1) >= 10) "$currentlyRunning" else "0${currentlyRunning + 1}"}"
-
             val slaveChannel = slaveInfo.channel
 
             if (slaveChannel == null) {
@@ -58,14 +56,14 @@ class SpigotProcessRequestHandler(
                     count,
                     SpigotProcess(
                         groupName = spigotGroup.name,
-                        name = name,
-                        uuid = UUID.randomUUID().toString(),
+                        name = null,
+                        uuid = null,
                         ip = ip,
                         type = ProcessType.SPIGOT,
                         stage = ProcessStage.STARTING,
                         minMemory = spigotGroup.minMemory,
                         maxMemory = spigotGroup.maxMemory,
-                        port = PortUtils.getNextFreePort(25565),
+                        port = -1,
                         maxPlayers = spigotGroup.maxPlayers,
                         joinPower = spigotGroup.joinPower,
                         maintenance = spigotGroup.maintenance,
@@ -82,14 +80,14 @@ class SpigotProcessRequestHandler(
                 this.requestProcess(
                     SpigotProcess(
                         groupName = spigotGroup.name,
-                        name = name,
-                        uuid = UUID.randomUUID().toString(),
+                        name = null,
+                        uuid = null,
                         ip = ip,
                         type = ProcessType.SPIGOT,
                         stage = ProcessStage.STARTING,
                         minMemory = spigotGroup.minMemory,
                         maxMemory = spigotGroup.maxMemory,
-                        port = PortUtils.getNextFreePort(25565),
+                        port = -1,
                         maxPlayers = spigotGroup.maxPlayers,
                         joinPower = spigotGroup.joinPower,
                         maintenance = spigotGroup.maintenance,
@@ -110,6 +108,11 @@ class SpigotProcessRequestHandler(
 
     override fun requestProcess(process: SpigotProcess) {
         val groupName = process.groupName
+        val currentlyRunning = spigotProcessRegistry.getRunningProcessCount(groupName)
+
+        process.uuid = UUID.randomUUID().toString()
+        process.port = PortUtils.getNextFreePort(60000)
+        process.name = "$groupName-${if ((currentlyRunning + 1) >= 10) "${currentlyRunning + 1}" else "0${currentlyRunning + 1}"}"
 
         val slaveInfo = slaveRegistry.getLeastUsedSlave(groupName)
 

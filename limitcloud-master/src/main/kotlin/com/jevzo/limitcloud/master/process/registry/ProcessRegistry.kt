@@ -9,13 +9,13 @@ open class ProcessRegistry<T : AbstractProcess> {
     val processes: Cache<String, T> = Cache()
 
     fun registerProcess(process: T) {
-        if (processes.containsKey(process.uuid)) return
+        if (processes.containsKey(process.uuid!!)) return
 
-        processes[process.uuid] = process
+        processes[process.uuid!!] = process
     }
 
     fun unregisterProcess(process: T) {
-        processes.remove(process.uuid)
+        processes.remove(process.uuid!!)
     }
 
     fun updateProcess(process: T) {
@@ -28,6 +28,6 @@ open class ProcessRegistry<T : AbstractProcess> {
     }
 
     fun getRunningProcessCount(name: String): Int {
-        return processes.getCacheValues().stream().filter { it.name.startsWith(name) }.collect(Collectors.toList()).size
+        return processes.getCacheValues().stream().filter { it.groupName == name }.collect(Collectors.toList()).size
     }
 }

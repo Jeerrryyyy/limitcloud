@@ -4,6 +4,10 @@ import com.jevzo.limitcloud.library.document.Document
 import com.jevzo.limitcloud.library.dto.SlaveInfo
 import com.jevzo.limitcloud.library.network.protocol.Packet
 import com.jevzo.limitcloud.master.LimitCloudMaster
+import com.jevzo.limitcloud.master.configuration.BungeeGroupLoader
+import com.jevzo.limitcloud.master.configuration.SpigotGroupLoader
+import com.jevzo.limitcloud.master.groups.bungee.BungeeGroupHandler
+import com.jevzo.limitcloud.master.groups.spigot.SpigotGroupHandler
 import com.jevzo.limitcloud.master.network.utils.NetworkUtils
 import com.jevzo.limitcloud.master.process.handler.handlers.BungeeProcessRequestHandler
 import com.jevzo.limitcloud.master.process.handler.handlers.SpigotProcessRequestHandler
@@ -15,6 +19,7 @@ import io.netty.channel.ChannelHandlerContext
 import org.kodein.di.instance
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.stream.Collectors
 import kotlin.properties.Delegates
 
 class PacketInSlaveRequestConnection : Packet {
@@ -27,6 +32,8 @@ class PacketInSlaveRequestConnection : Packet {
 
     private val bungeeProcessRequestHandler: BungeeProcessRequestHandler by LimitCloudMaster.KODEIN.instance()
     private val spigotProcessRequestHandler: SpigotProcessRequestHandler by LimitCloudMaster.KODEIN.instance()
+    private val spigotGroupHandler: SpigotGroupHandler by LimitCloudMaster.KODEIN.instance()
+    private val bungeeGroupHandler: BungeeGroupHandler by LimitCloudMaster.KODEIN.instance()
 
     private lateinit var slaveInfo: SlaveInfo
 
@@ -57,6 +64,21 @@ class PacketInSlaveRequestConnection : Packet {
                 })"
             )
             return
+        }
+
+        if (slaveInfo.responsibleGroups.isEmpty()) {
+            val bungeeGroups: MutableList<String> = bungeeGroupHandler.getGroups().stream()
+                .map { it.name }
+                .collect(Collectors.toList())
+
+            slaveInfo.responsibleGroups.addAll(bungeeGroups)
+
+            val spigotGroups: MutableList<String> = spigotGroupHandler.getGroups().stream()
+                .map { it.name }
+                .collect(Collectors.toList())
+
+            slaveInfo.responsibleGroups.addAll(spigotGroups)
+            logger.warn("Slave:(Name=$slaveName) has no groups assigned. Assigning all groups...")
         }
 
         val registered = slaveRegistry.registerSlave(slaveInfo)
@@ -90,8 +112,8 @@ class PacketInSlaveRequestConnection : Packet {
             })"
         )
 
-        spigotProcessRequestHandler.requestProcessesOnConnect(slaveInfo)
         bungeeProcessRequestHandler.requestProcessesOnConnect(slaveInfo)
+        spigotProcessRequestHandler.requestProcessesOnConnect(slaveInfo)
     }
 
     private fun isSlaveAuthenticated(channel: Channel, slaveName: String): Boolean {

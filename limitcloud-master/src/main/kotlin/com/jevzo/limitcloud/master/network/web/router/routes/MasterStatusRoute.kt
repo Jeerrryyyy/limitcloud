@@ -26,7 +26,7 @@ class MasterStatusRoute : Route {
 
         val systemInfo = Document().appendDouble("cpuUsage", RoundUtils.roundDouble(HardwareUtils.getCpuUsage(), 2))
             .appendDouble("internalCpuUsage", RoundUtils.roundDouble(HardwareUtils.getInternalCpuUsage(), 2))
-            .appendLong("memoryUsage", HardwareUtils.getMemoryUsage() / 1024 / 1024)
+            .appendLong("memoryUsage", HardwareUtils.getRuntimeMemoryUsage())
             .appendInt("runningThreads", Thread.activeCount())
             .appendInt("runningExecutorServiceThreads", threadPool.internalPool.activeCount)
 

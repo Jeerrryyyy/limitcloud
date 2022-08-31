@@ -12,7 +12,7 @@ class SpigotProcessRegistry : ProcessRegistry<SpigotProcess>() {
             if (cloudProcess.lobbyServer) continue
 
             val pair = Pair(cloudProcess.ip, cloudProcess.port)
-            returnMap[cloudProcess.name] = pair
+            returnMap[cloudProcess.name!!] = pair
         }
 
         return returnMap
@@ -25,7 +25,7 @@ class SpigotProcessRegistry : ProcessRegistry<SpigotProcess>() {
             if (!cloudProcess.lobbyServer) continue
 
             val pair = Pair(cloudProcess.ip, cloudProcess.port)
-            returnMap[cloudProcess.name] = pair
+            returnMap[cloudProcess.name!!] = pair
         }
 
         return returnMap

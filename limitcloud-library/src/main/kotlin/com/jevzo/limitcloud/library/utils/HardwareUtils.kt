@@ -19,6 +19,14 @@ class HardwareUtils {
             return this.getSystemMemory() - this.getOperatingSystemBean().freeMemorySize
         }
 
+        fun getRuntimeMemoryUsage(): Long {
+            return (this.getRuntimeMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024
+        }
+
+        fun getRuntimeMemory(): Long {
+            return Runtime.getRuntime().totalMemory()
+        }
+
         fun getSystemMemory(): Long {
             return this.getOperatingSystemBean().totalMemorySize
         }

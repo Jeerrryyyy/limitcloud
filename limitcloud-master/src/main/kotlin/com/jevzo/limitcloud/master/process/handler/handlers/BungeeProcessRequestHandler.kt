@@ -32,8 +32,6 @@ class BungeeProcessRequestHandler(
             }
 
             val currentlyRunning = bungeeProcessRegistry.getRunningProcessCount(bungeeGroup.name)
-            val name = "${bungeeGroup.name}-${if ((currentlyRunning + 1) >= 10) "$currentlyRunning" else "0${currentlyRunning + 1}"}"
-
             val slaveChannel = slaveInfo.channel
 
             if (slaveChannel == null) {
@@ -58,14 +56,14 @@ class BungeeProcessRequestHandler(
                     count,
                     BungeeProcess(
                         groupName = bungeeGroup.name,
-                        name = name,
-                        uuid = UUID.randomUUID().toString(),
+                        name = null,
+                        uuid = null,
                         ip = ip,
                         type = ProcessType.BUNGEE,
                         stage = ProcessStage.STARTING,
                         minMemory = bungeeGroup.minMemory,
                         maxMemory = bungeeGroup.maxMemory,
-                        port = PortUtils.getNextFreePort(25565),
+                        port = -1,
                         maxPlayers = bungeeGroup.maxPlayers,
                         joinPower = bungeeGroup.joinPower,
                         maintenance = bungeeGroup.maintenance
@@ -79,14 +77,14 @@ class BungeeProcessRequestHandler(
                 this.requestProcess(
                     BungeeProcess(
                         groupName = bungeeGroup.name,
-                        name = name,
-                        uuid = UUID.randomUUID().toString(),
+                        name = null,
+                        uuid = null,
                         ip = ip,
                         type = ProcessType.BUNGEE,
                         stage = ProcessStage.STARTING,
                         minMemory = bungeeGroup.minMemory,
                         maxMemory = bungeeGroup.maxMemory,
-                        port = PortUtils.getNextFreePort(25565),
+                        port = -1,
                         maxPlayers = bungeeGroup.maxPlayers,
                         joinPower = bungeeGroup.joinPower,
                         maintenance = bungeeGroup.maintenance
@@ -104,6 +102,11 @@ class BungeeProcessRequestHandler(
 
     override fun requestProcess(process: BungeeProcess) {
         val groupName = process.groupName
+        val currentlyRunning = bungeeProcessRegistry.getRunningProcessCount(groupName)
+
+        process.uuid = UUID.randomUUID().toString()
+        process.port = PortUtils.getNextFreePort(25565)
+        process.name = "$groupName-${if ((currentlyRunning + 1) >= 10) "${currentlyRunning + 1}" else "0${currentlyRunning + 1}"}"
 
         val slaveInfo = slaveRegistry.getLeastUsedSlave(groupName)
 
