@@ -3,19 +3,24 @@ package com.jevzo.limitcloud.slave
 import com.google.gson.GsonBuilder
 import com.jevzo.limitcloud.library.commands.CommandManager
 import com.jevzo.limitcloud.library.configuration.ConfigurationExecutor
+import com.jevzo.limitcloud.library.network.error.ErrorHandler
 import com.jevzo.limitcloud.library.network.helper.NettyHelper
 import com.jevzo.limitcloud.library.network.protocol.PacketId
 import com.jevzo.limitcloud.library.network.protocol.PacketRegistry
 import com.jevzo.limitcloud.library.threading.ThreadPool
+import com.jevzo.limitcloud.slave.checker.StaticFileChecker
 import com.jevzo.limitcloud.slave.commands.HelpCommand
 import com.jevzo.limitcloud.slave.configuration.DefaultCloudConfiguration
 import com.jevzo.limitcloud.slave.configuration.DefaultFolderCreator
 import com.jevzo.limitcloud.slave.configuration.SlaveKeyReader
 import com.jevzo.limitcloud.slave.network.NetworkClient
 import com.jevzo.limitcloud.slave.network.protocol.`in`.PacketInSlaveConnectionEstablished
+import com.jevzo.limitcloud.slave.network.protocol.out.PacketOutSlaveReady
 import com.jevzo.limitcloud.slave.network.protocol.out.PacketOutSlaveRequestConnection
 import com.jevzo.limitcloud.slave.network.protocol.out.PacketOutSlaveUpdateLoadStatus
 import com.jevzo.limitcloud.slave.network.utils.NetworkUtils
+import com.jevzo.limitcloud.slave.process.ProcessRegistry
+import com.jevzo.limitcloud.slave.process.handler.SpigotProcessRequestHandler
 import com.jevzo.limitcloud.slave.process.protocol.`in`.PacketInRequestBungeeProcess
 import com.jevzo.limitcloud.slave.process.protocol.`in`.PacketInRequestSpigotProcess
 import com.jevzo.limitcloud.slave.runtime.DirectoryConstants
@@ -56,6 +61,7 @@ class LimitCloudSlave {
     }
 
     fun shutdownGracefully() {
+        KODEIN.direct.instance<ProcessRegistry>().killAllProcesses()
         KODEIN.direct.instance<CommandManager>().stop()
         KODEIN.direct.instance<NetworkClient>().shutdownGracefully()
         KODEIN.direct.instance<ThreadPool>().shutdown()
@@ -74,6 +80,8 @@ class LimitCloudSlave {
             bindSingleton { RuntimeVars() }
             bindSingleton { NettyHelper() }
             bindSingleton { NetworkUtils() }
+
+            bindSingleton { StaticFileChecker(instance(), instance()) }
 
             bindSingleton {
                 val configurationExecutor = ConfigurationExecutor()
@@ -98,6 +106,7 @@ class LimitCloudSlave {
 
                 packetRegistry.registerOutgoingPacket(PacketId.PACKET_REQUEST_CONNECTION, PacketOutSlaveRequestConnection::class.java)
                 packetRegistry.registerOutgoingPacket(PacketId.PACKET_UPDATE_LOAD_STATUS, PacketOutSlaveUpdateLoadStatus::class.java)
+                packetRegistry.registerOutgoingPacket(PacketId.PACKET_SLAVE_READY, PacketOutSlaveReady::class.java)
 
                 packetRegistry.registerIncomingPacket(PacketId.PACKET_ESTABLISHED_CONNECTION, PacketInSlaveConnectionEstablished::class.java)
                 packetRegistry.registerIncomingPacket(PacketId.PACKET_REQUEST_BUNGEE_PROCESS, PacketInRequestBungeeProcess::class.java)
@@ -105,6 +114,11 @@ class LimitCloudSlave {
 
                 packetRegistry
             }
+
+            bindSingleton { ErrorHandler() }
+
+            bindSingleton { ProcessRegistry(instance()) }
+            bindSingleton { SpigotProcessRequestHandler(instance(), instance(), instance()) }
 
             bindSingleton { NetworkClient(instance(), instance()) }
         }

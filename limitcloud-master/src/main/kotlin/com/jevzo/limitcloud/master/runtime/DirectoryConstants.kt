@@ -16,6 +16,7 @@ class DirectoryConstants {
     val masterTemplateBungee: String = "app/master/template/bungee"
     val masterTemplateSpigot: String = "app/master/template/spigot"
     val masterWeb: String = "app/master/web"
+    val masterWebStatic: String = "app/master/web/static"
     val masterGlobal: String = "app/master/global"
     val masterGlobalBungee: String = "app/master/global/bungee"
     val masterGlobalSpigot: String = "app/master/global/spigot"

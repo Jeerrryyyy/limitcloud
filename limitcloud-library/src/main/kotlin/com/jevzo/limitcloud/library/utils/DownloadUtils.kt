@@ -21,5 +21,19 @@ class DownloadUtils {
 
             FileUtils.copyFileFromStream(inputStream, to)
         }
+
+        @Throws(SocketTimeoutException::class)
+        fun downloadFile(url: String, to: String, cloudAuthKey: String) {
+            val inputStream = DefaultRequestFactory()
+                .newFactory(url)
+                .setRequestProperty("User-Agent", requestProperty.getOrDefault("User-Agent", ":^)"))
+                .setRequestProperty("X-cloud-auth-key", cloudAuthKey)
+                .setConnectTimeout(10000)
+                .setReadTimeout(10000)
+                .setUseCache(false)
+                .fire()
+
+            FileUtils.copyFileFromStream(inputStream, to)
+        }
     }
 }

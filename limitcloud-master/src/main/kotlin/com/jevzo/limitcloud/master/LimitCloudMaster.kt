@@ -28,6 +28,7 @@ import com.jevzo.limitcloud.master.process.registry.registries.SpigotProcessRegi
 import com.jevzo.limitcloud.master.runtime.DirectoryConstants
 import com.jevzo.limitcloud.master.runtime.RuntimeVars
 import com.jevzo.limitcloud.master.slave.SlaveRegistry
+import com.jevzo.limitcloud.master.slave.protocol.`in`.PacketInSlaveReady
 import com.jevzo.limitcloud.master.slave.protocol.`in`.PacketInSlaveRequestConnection
 import com.jevzo.limitcloud.master.slave.protocol.`in`.PacketInSlaveUpdateLoadStatus
 import com.jevzo.limitcloud.master.slave.protocol.out.PacketOutSlaveConnectionEstablished
@@ -119,6 +120,7 @@ class LimitCloudMaster {
 
                 packetRegistry.registerIncomingPacket(PacketId.PACKET_REQUEST_CONNECTION, PacketInSlaveRequestConnection::class.java)
                 packetRegistry.registerIncomingPacket(PacketId.PACKET_UPDATE_LOAD_STATUS, PacketInSlaveUpdateLoadStatus::class.java)
+                packetRegistry.registerIncomingPacket(PacketId.PACKET_SLAVE_READY, PacketInSlaveReady::class.java)
 
                 packetRegistry.registerOutgoingPacket(PacketId.PACKET_ESTABLISHED_CONNECTION, PacketOutSlaveConnectionEstablished::class.java)
                 packetRegistry.registerOutgoingPacket(PacketId.PACKET_REQUEST_BUNGEE_PROCESS, PacketOutRequestBungeeProcess::class.java)

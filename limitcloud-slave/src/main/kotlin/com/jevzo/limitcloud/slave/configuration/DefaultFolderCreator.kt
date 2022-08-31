@@ -12,6 +12,7 @@ class DefaultFolderCreator(
     private val requiredFolders: MutableList<Path> = mutableListOf(
         Path.of(directoryConstants.slave),
         Path.of(directoryConstants.slaveCached),
+        Path.of(directoryConstants.slaveCachedStatic),
         Path.of(directoryConstants.slaveCachedTemplates),
         Path.of(directoryConstants.slaveCachedTemplatesBungee),
         Path.of(directoryConstants.slaveCachedTemplatesSpigot),

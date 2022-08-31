@@ -13,7 +13,7 @@ class ThreadPool {
         internalPool.shutdown()
 
         try {
-            if (!internalPool.awaitTermination(10, TimeUnit.SECONDS)) {
+            if (!internalPool.awaitTermination(20, TimeUnit.SECONDS)) {
                 internalPool.shutdownNow()
             }
         } catch (e: InterruptedException) {

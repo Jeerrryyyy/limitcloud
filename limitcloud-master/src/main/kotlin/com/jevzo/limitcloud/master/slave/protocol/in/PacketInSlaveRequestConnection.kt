@@ -30,8 +30,6 @@ class PacketInSlaveRequestConnection : Packet {
     private val slaveRegistry: SlaveRegistry by LimitCloudMaster.KODEIN.instance()
     private val runtimeVars: RuntimeVars by LimitCloudMaster.KODEIN.instance()
 
-    private val bungeeProcessRequestHandler: BungeeProcessRequestHandler by LimitCloudMaster.KODEIN.instance()
-    private val spigotProcessRequestHandler: SpigotProcessRequestHandler by LimitCloudMaster.KODEIN.instance()
     private val spigotGroupHandler: SpigotGroupHandler by LimitCloudMaster.KODEIN.instance()
     private val bungeeGroupHandler: BungeeGroupHandler by LimitCloudMaster.KODEIN.instance()
 
@@ -111,9 +109,6 @@ class PacketInSlaveRequestConnection : Packet {
                 channelHandlerContext.channel().remoteAddress().toString().replace("/", "")
             })"
         )
-
-        bungeeProcessRequestHandler.requestProcessesOnConnect(slaveInfo)
-        spigotProcessRequestHandler.requestProcessesOnConnect(slaveInfo)
     }
 
     private fun isSlaveAuthenticated(channel: Channel, slaveName: String): Boolean {

@@ -25,6 +25,7 @@ class DefaultFolderCreator(
         Path.of(directoryConstants.masterTemplateBungee),
         Path.of(directoryConstants.masterTemplateSpigot),
         Path.of(directoryConstants.masterWeb),
+        Path.of(directoryConstants.masterWebStatic),
         Path.of(directoryConstants.masterGlobal),
         Path.of(directoryConstants.masterGlobalBungee),
         Path.of(directoryConstants.masterGlobalSpigot),

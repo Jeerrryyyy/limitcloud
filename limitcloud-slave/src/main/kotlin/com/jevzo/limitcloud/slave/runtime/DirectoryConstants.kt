@@ -3,6 +3,7 @@ package com.jevzo.limitcloud.slave.runtime
 class DirectoryConstants {
     val slave: String = "app/slave"
     val slaveCached: String = "app/slave/cached"
+    val slaveCachedStatic: String = "app/slave/cached/static"
     val slaveCachedTemplates: String = "app/slave/cached/templates"
     val slaveCachedTemplatesBungee: String = "app/slave/cached/templates/bungee"
     val slaveCachedTemplatesSpigot: String = "app/slave/cached/templates/spigot"

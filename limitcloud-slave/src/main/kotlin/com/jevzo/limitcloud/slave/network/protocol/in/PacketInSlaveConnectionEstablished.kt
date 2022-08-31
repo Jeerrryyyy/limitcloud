@@ -3,6 +3,9 @@ package com.jevzo.limitcloud.slave.network.protocol.`in`
 import com.jevzo.limitcloud.library.document.Document
 import com.jevzo.limitcloud.library.network.protocol.Packet
 import com.jevzo.limitcloud.slave.LimitCloudSlave
+import com.jevzo.limitcloud.slave.checker.StaticFileChecker
+import com.jevzo.limitcloud.slave.network.protocol.out.PacketOutSlaveReady
+import com.jevzo.limitcloud.slave.network.utils.NetworkUtils
 import com.jevzo.limitcloud.slave.runtime.RuntimeVars
 import io.netty.channel.ChannelHandlerContext
 import org.kodein.di.instance
@@ -15,6 +18,8 @@ class PacketInSlaveConnectionEstablished : Packet {
     private val logger: Logger = LoggerFactory.getLogger(PacketInSlaveConnectionEstablished::class.java)
 
     private val runtimeVars: RuntimeVars by LimitCloudSlave.KODEIN.instance()
+    private val networkUtils: NetworkUtils by LimitCloudSlave.KODEIN.instance()
+    private val staticFileChecker: StaticFileChecker by LimitCloudSlave.KODEIN.instance()
 
     private lateinit var message: String
     private lateinit var webKey: String
@@ -31,6 +36,11 @@ class PacketInSlaveConnectionEstablished : Packet {
         if (successful) {
             runtimeVars.webKey = webKey
             logger.info(message)
+
+            staticFileChecker.checkForPatchedPaperJar()
+            staticFileChecker.checkForMinecraftJar()
+
+            networkUtils.sendPacket(PacketOutSlaveReady(runtimeVars.slaveConfig.uuid), runtimeVars.masterChannel)
         } else logger.error(message)
     }
 }

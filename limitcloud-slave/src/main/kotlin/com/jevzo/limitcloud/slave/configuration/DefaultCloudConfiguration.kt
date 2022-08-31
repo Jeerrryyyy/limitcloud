@@ -24,6 +24,7 @@ class DefaultCloudConfiguration(
         if (!cloudConfigFile.exists()) {
             val masterAddress = this.readMasterAddress()
             val masterPort = this.readMasterPort()
+            val webPort = this.readWebPort()
             val slaveName = this.readSlaveName()
             val delimiter = this.readSlaveDelimiter()
             val suffix = this.readSlaveSuffix()
@@ -33,6 +34,7 @@ class DefaultCloudConfiguration(
             val slaveConfig = SlaveConfig(
                 masterAddress = masterAddress,
                 masterPort = masterPort,
+                webPort = webPort,
                 name = slaveName,
                 delimiter = delimiter,
                 suffix = suffix,
@@ -68,6 +70,22 @@ class DefaultCloudConfiguration(
 
         if (input.equals("")) {
             return 8000
+        }
+
+        return try {
+            Integer.parseInt(input)
+        } catch (e: NumberFormatException) {
+            logger.warn("The port needs to be a non floating number!")
+            this.readMasterPort()
+        }
+    }
+
+    private fun readWebPort(): Int {
+        logger.info("Please enter the port of the web server. Default: 8080")
+        val input = bufferedReader.readLine()
+
+        if (input.equals("")) {
+            return 8080
         }
 
         return try {
